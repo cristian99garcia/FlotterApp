@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Flotter</string>
+    <string name="new_function">Nueva función</string>
+    <string name="save_function">Guardar</string>
+    <string name="edit_functions">Editar funciones</string>
+    <string name="study_elements_label">Elementos de estudio</string>
+
+    <string name="put_funciones">pFunciones</string>
+    <string name="put_colores">pColores</string>
+    <string name="put_index">pIndex</string>
+
+    <!-- Keyboard keys -->
+    <string name="keyboard_0">0</string>
+    <string name="keyboard_1">1</string>
+    <string name="keyboard_2">2</string>
+    <string name="keyboard_3">3</string>
+    <string name="keyboard_4">4</string>
+    <string name="keyboard_5">5</string>
+    <string name="keyboard_6">6</string>
+    <string name="keyboard_7">7</string>
+    <string name="keyboard_8">8</string>
+    <string name="keyboard_9">9</string>
+    <string name="keyboard_pi">π</string>
+    <string name="keyboard_divide">÷</string>
+    <string name="keyboard_multiply">×</string>
+    <string name="keyboard_substract">-</string>
+    <string name="keyboard_add">+</string>
+    <string name="accepted_keys">0123456789*/-+()[]{} .^=×÷πabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <string name="tipo_nula">Nula</string>
+    <string name="tipo_constante">Constante</string>
+    <string name="tipo_lineal">Lineal</string>
+    <string name="tipo_cuadratica">Cuadrática</string>
+    <string name="tipo_cubica">Cúbica</string>
+    <string name="tipo_polinomica">Polinómica</string>
+    <string name="tipo_exponencial">Exponencial</string>
+    <string name="tipo_racional">Racional</string>
+    <string name="tipo_logaritmica">Logarítmica</string>
+    <string name="tipo_trigonometrica">Trigonométrica</string>
+
+    <string name="conjunto_vacio">∅</string>
+    <string name="conjunto_naturales">ℕ</string>
+    <string name="conjunto_enteros">ℤ</string>
+    <string name="conjunto_racionales">ℚ</string>
+    <string name="conjunto_reales">ℝ</string>
+    <string name="conjunto_complejos">ℂ</string>
+</resources>

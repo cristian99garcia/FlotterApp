@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="colorAccentDark">#E64A19</color>
+    <color name="colorSupport">#2196F3</color>
+    <color name="colorSupportDark">#1976D2</color>
+    <color name="white">#fafafa</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="keyboard_keytext_color">#EEEEEE</color>
+    <color name="keyboard_keybackground_color">#434343</color>
+</resources>

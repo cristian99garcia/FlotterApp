@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="17%p"
+    android:keyHeight="10%p"
+    android:horizontalGap="1px"
+    android:verticalGap="1px">
+
+    <Row>
+        <Key android:codes="200" android:keyLabel="q" android:keyOutputText="q"/>
+        <Key android:codes="201" android:keyLabel="w" android:keyOutputText="w"/>
+        <Key android:codes="202" android:keyLabel="e" android:keyOutputText="e"/>
+        <Key android:codes="203" android:keyLabel="r" android:keyOutputText="r"/>
+        <Key android:codes="204" android:keyLabel="t" android:keyOutputText="t"/>
+        <Key android:codes="205" android:keyLabel="y" android:keyOutputText="y"/>
+        <Key android:codes="206" android:keyLabel="u" android:keyOutputText="u"/>
+        <Key android:codes="207" android:keyLabel="i" android:keyOutputText="i"/>
+        <Key android:codes="208" android:keyLabel="o" android:keyOutputText="o"/>
+        <Key android:codes="209" android:keyLabel="p" android:keyOutputText="p"/>
+    </Row>
+    <Row>
+        <Key android:codes="210" android:keyLabel="a" android:keyOutputText="a"/>
+        <Key android:codes="211" android:keyLabel="s" android:keyOutputText="s"/>
+        <Key android:codes="212" android:keyLabel="d" android:keyOutputText="d"/>
+        <Key android:codes="213" android:keyLabel="f" android:keyOutputText="f"/>
+        <Key android:codes="214" android:keyLabel="g" android:keyOutputText="g"/>
+        <Key android:codes="215" android:keyLabel="h" android:keyOutputText="h"/>
+        <Key android:codes="216" android:keyLabel="j" android:keyOutputText="j"/>
+        <Key android:codes="217" android:keyLabel="k" android:keyOutputText="k"/>
+        <Key android:codes="218" android:keyLabel="l" android:keyOutputText="l"/>
+    </Row>
+    <Row>
+        <Key android:codes="219" android:keyLabel="z" android:keyOutputText="z"/>
+        <Key android:codes="220" android:keyLabel="x" android:keyOutputText="x"/>
+        <Key android:codes="221" android:keyLabel="c" android:keyOutputText="c"/>
+        <Key android:codes="222" android:keyLabel="v" android:keyOutputText="v"/>
+        <Key android:codes="223" android:keyLabel="b" android:keyOutputText="b"/>
+        <Key android:codes="224" android:keyLabel="n" android:keyOutputText="n"/>
+        <Key android:codes="225" android:keyLabel="m" android:keyOutputText="m"/>
+    </Row>
+    <Row>
+        <Key android:codes="300" android:keyLabel="√"/>
+        <Key android:codes="301" android:keyLabel="π"/>
+        <Key android:codes="302" android:keyLabel="!"/>
+        <Key android:codes="302" android:keyLabel="ln"/>
+        <Key android:codes="303" android:keyLabel="log"/>
+        <Key android:codes="304" android:keyLabel="|abs|"/>
+    </Row>
+</Keyboard>
