@@ -1,6 +1,4 @@
-package com.carrotgames.flotter;
-
-import android.util.Log;
+package com.carrotgames.flotter.pojo;
 
 import java.util.ArrayList;
 import java.util.Arrays;

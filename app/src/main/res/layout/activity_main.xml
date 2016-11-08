@@ -9,9 +9,9 @@
     android:layout_height="match_parent"
     >
 
-    <include android:id="@+id/actionBar"
-        layout="@layout/actionbar"
-        />
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/actionbar" />
 
     <LinearLayout
         android:id="@+id/lyMain"

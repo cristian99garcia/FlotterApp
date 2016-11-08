@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.carrotgames.flotter.pojo.Funcion;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -34,73 +35,58 @@ public class MainActivity extends AppCompatActivity {
         newFunctionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Funcion> funs = graph.getFunciones();
-                String[] funciones = new String[funs.size()];
-                int[] colores = new int[funs.size()];
-                for (int i = 0; i < funs.size(); i++) {
-                    Funcion funcion = funs.get(i);
-                    funciones[i] = funcion.getNombre() + "#" + funcion.getExpresion();
+                ArrayList<Funcion> funciones = graph.getFunciones();
+                String[] nombres = new String[funciones.size()];
+                String[] expresiones = new String[funciones.size()];
+
+                int[] colores = new int[funciones.size()];
+                for (int i = 0; i < funciones.size(); i++) {
+                    Funcion funcion = funciones.get(i);
+                    nombres[i] = funcion.getNombre();
+                    expresiones[i] = funcion.getExpresion();
                     colores[i] = funcion.getColor();
                 }
 
                 Intent intent = new Intent(MainActivity.this, EditFunctionActivity.class);
-                intent.putExtra(getResources().getString(R.string.put_funciones), funciones);
+                intent.putExtra(getResources().getString(R.string.put_nombres), nombres);
+                intent.putExtra(getResources().getString(R.string.put_expresiones), expresiones);
                 intent.putExtra(getResources().getString(R.string.put_colores), colores);
                 startActivity(intent);
             }
         });
 
-        /*FloatingActionButton editFunctionsButton = (FloatingActionButton) findViewById(R.id.action_edit_functions);
-        editFunctionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Funcion> funs = graph.getFunctions();
-                String[] funciones = new String[funs.size()];
-                int[] colores = new int[funs.size()];
-                for (int i = 0; i < funs.size(); i++) {
-                    Funcion funcion = funs.get(i);
-                    funciones[i] = funcion.getName() + "#" + funcion.getFormula();
-                    colores[i] = funcion.getColor();
-                }
-
-                Intent intent = new Intent(MainActivity.this, FunctionsListActivity.class);
-                intent.putExtra(getResources().getString(R.string.put_funciones), funciones);
-                intent.putExtra(getResources().getString(R.string.put_colores), colores);
-                startActivity(intent);
-            }
-        });*/
-
         FloatingActionButton studyElementsButton = (FloatingActionButton) findViewById(R.id.action_study_elements);
         studyElementsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Funcion> funs = graph.getFunciones();
-                String[] funciones = new String[funs.size()];
-                int[] colores = new int[funs.size()];
-                for (int i = 0; i < funs.size(); i++) {
-                    Funcion funcion = funs.get(i);
-                    funciones[i] = funcion.getNombre() + "#" + funcion.getExpresion();
+                ArrayList<Funcion> funciones = graph.getFunciones();
+                String[] nombres = new String[funciones.size()];
+                String[] expresiones = new String[funciones.size()];
+                int[] colores = new int[funciones.size()];
+
+                for (int i = 0; i < funciones.size(); i++) {
+                    Funcion funcion = funciones.get(i);
+                    nombres[i] = funcion.getNombre();
+                    expresiones[i] = funcion.getExpresion();
                     colores[i] = funcion.getColor();
                 }
 
-                Intent intent = new Intent(MainActivity.this, FunctionsListActivity.class);
-                intent.putExtra(getResources().getString(R.string.put_funciones), funciones);
+                Intent intent = new Intent(MainActivity.this, FunctionsActivity.class);
+                intent.putExtra(getResources().getString(R.string.put_nombres), nombres);
+                intent.putExtra(getResources().getString(R.string.put_expresiones), expresiones);
                 intent.putExtra(getResources().getString(R.string.put_colores), colores);
                 startActivity(intent);
             }
         });
 
         Bundle parametros = getIntent().getExtras();
-        if (getIntent().hasExtra(getResources().getString(R.string.put_funciones))) {
-            Log.i("mainactivity", "true");
-            String[] funciones = parametros.getStringArray(getResources().getString(R.string.put_funciones));
+        if (getIntent().hasExtra(getResources().getString(R.string.put_nombres))) {
+            String[] nombres = parametros.getStringArray(getResources().getString(R.string.put_nombres));
+            String[] expresiones = parametros.getStringArray(getResources().getString(R.string.put_expresiones));
             int[] colores = parametros.getIntArray(getResources().getString(R.string.put_colores));
 
-            for (int i=0; i < funciones.length; i++) {
-                String nombre = funciones[i].split("#")[0];
-                String formula = funciones[i].split("#")[1];
-                Funcion funcion = new Funcion(nombre, formula);
-                funcion.setColor(colores[i]);
+            for (int i=0; i < nombres.length; i++) {
+                Funcion funcion = new Funcion(nombres[i], expresiones[i], colores[i]);
                 graph.agregarFuncion(funcion);
             }
         } else {

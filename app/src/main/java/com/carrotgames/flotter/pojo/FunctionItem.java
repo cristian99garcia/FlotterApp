@@ -1,4 +1,4 @@
-package com.carrotgames.flotter;
+package com.carrotgames.flotter.pojo;
 
 /**
  * Created by cristian on 10/10/16.

@@ -1,7 +1,9 @@
-package com.carrotgames.flotter;
+package com.carrotgames.flotter.pojo;
 
 import android.app.Activity;
 import android.graphics.Color;
+
+import com.carrotgames.flotter.R;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;

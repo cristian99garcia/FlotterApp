@@ -12,13 +12,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
+import com.carrotgames.flotter.pojo.Funcion;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 public class EditFunctionActivity extends AppCompatActivity {
 
-    private String[] funciones = new String[0];
+    private String[] nombres = new String[0];
+    private String[] expresiones = new String[0];
     private int[] colores = new int[0];
 
     enum KeyboardType {
@@ -44,8 +45,9 @@ public class EditFunctionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         Bundle parametros = getIntent().getExtras();
-        if (getIntent().hasExtra(getResources().getString(R.string.put_funciones))) {
-            funciones = parametros.getStringArray(getResources().getString(R.string.put_funciones));
+        if (getIntent().hasExtra(getResources().getString(R.string.put_nombres))) {
+            nombres = parametros.getStringArray(getResources().getString(R.string.put_nombres));
+            expresiones = parametros.getStringArray(getResources().getString(R.string.put_expresiones));
             colores = parametros.getIntArray(getResources().getString(R.string.put_colores));
         }
 
@@ -56,13 +58,13 @@ public class EditFunctionActivity extends AppCompatActivity {
                 boolean go = addFunction();
                 if (go) {
                     Intent intent = new Intent(EditFunctionActivity.this, MainActivity.class);
-                    intent.putExtra(getResources().getString(R.string.put_funciones), funciones);
+                    intent.putExtra(getResources().getString(R.string.put_nombres), nombres);
+                    intent.putExtra(getResources().getString(R.string.put_expresiones), expresiones);
                     intent.putExtra(getResources().getString(R.string.put_colores), colores);
                     startActivity(intent);
                 }
             }
         });
-
 
         mainKeyboard = new Keyboard(EditFunctionActivity.this, R.xml.keyboard);
         secondaryKeyboard = new Keyboard(EditFunctionActivity.this, R.xml.secondary_keyboard);
@@ -83,30 +85,36 @@ public class EditFunctionActivity extends AppCompatActivity {
     }
 
     private boolean addFunction() {
-        String formula = entry.getText().toString();
-        String parsedFormula = "";
-        String[] formulas = new String[funciones.length + 1];
-        int[] lcolores = new int[colores.length + 1];
-        if (!formula.trim().equals("")) {
-            for (int i = 0; i < funciones.length; i++) {
-                formulas[i] = funciones[i];
-                lcolores[i] = colores[i];
+        // Agregar función, devuelve si la expresión no esta malformada
+        String expresion = entry.getText().toString();
+        String lNombre = "";
+        String lExpresion = "";
+
+        String[] lNombres = new String[nombres.length + 1];
+        String[] lExpresiones = new String[expresiones.length + 1];
+        int[] lColores = new int[colores.length + 1];
+
+        if (!expresion.trim().equals("")) {
+            for (int i = 0; i < nombres.length; i++) {
+                lNombres[i] = nombres[i];
+                lExpresiones[i] = expresiones[i];
+                lColores[i] = colores[i];
             }
 
-            if (formula.contains("=")) {
-                String a = formula.split("=")[0];
-                String b = formula.split("=")[1];
+            if (expresion.contains("=")) {
+                lNombre = expresion.split("=")[0];
+                lExpresion = expresion.split("=")[1];
 
-                if (a.contains("(x)")) {
-                    a = Character.toString(a.charAt(0));
-                } else if (a.equals("y")) {
-                    a = "f";
+                if (lNombre.contains("(x)")) {
+                    lNombre = Character.toString(lNombre.charAt(0));
+                } else if (lNombre.equals("y")) {
+                    lNombre = "f";
                 } else {
-                    a = "f";
+                    lNombre = "f";
                 }
-                parsedFormula = a + "#" + b;
             } else {
-                parsedFormula = "f#" + formula;
+                lNombre = "f";
+                lExpresion = expresion;
             }
         } else {
             showSnackbar();
@@ -114,15 +122,18 @@ public class EditFunctionActivity extends AppCompatActivity {
         }
 
         try {
-            Funcion.analizarExpresion(parsedFormula.split("#")[1]);
-            formulas[formulas.length - 1] = parsedFormula;
-            lcolores[lcolores.length - 1] = Color.BLUE;
+            Funcion.analizarExpresion(lExpresion);
+            lNombres[lNombres.length - 1] = lNombre;
+            lExpresiones[lExpresiones.length - 1] = lExpresion;
+            lColores[lColores.length - 1] = Color.BLUE;  // TODO: La idea es que el usuario pueda elegir el color
 
-            funciones = new String[formulas.length];
-            colores = new int[formulas.length];
+            nombres = new String[lNombres.length];
+            expresiones = new String[lExpresiones.length];
+            colores = new int[lColores.length];
 
-            funciones = formulas;
-            colores = lcolores;
+            nombres = lNombres;
+            expresiones = lExpresiones;
+            colores = lColores;
             return true;
         } catch (Funcion.SintaxException error) {
             showSnackbar();

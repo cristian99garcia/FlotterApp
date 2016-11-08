@@ -16,25 +16,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FunctionsListActivity"
+            android:name=".EditFunctionActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".EditFunctionActivity"
-            android:parentActivityName=".FunctionsListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".FunctionPropertiesActivities"
-            android:parentActivityName=".FunctionsListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".FunctionsListActivity" />
+            android:name=".FunctionsActivity"
+                android:parentActivityName=".MainActivity">
+                <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity" />
         </activity>
     </application>
 

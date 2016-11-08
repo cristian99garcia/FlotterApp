@@ -8,4 +8,6 @@
     <dimen name="cardview_vertical_margin">5dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
     <dimen name="new_function_entry_size">30sp</dimen>
+    <dimen name="recycler_margin_horizontal">4dp</dimen>
+    <dimen name="recycler_margin_vertical">4dp</dimen>
 </resources>

@@ -1,4 +1,4 @@
-package com.carrotgames.flotter;
+package com.carrotgames.flotter.pojo;
 
 import android.util.Log;
 

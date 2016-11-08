@@ -5,7 +5,8 @@
     <string name="edit_functions">Editar funciones</string>
     <string name="study_elements_label">Elementos de estudio</string>
 
-    <string name="put_funciones">pFunciones</string>
+    <string name="put_nombres">pNombres</string>
+    <string name="put_expresiones">pExpresiones</string>
     <string name="put_colores">pColores</string>
     <string name="put_index">pIndex</string>
 
