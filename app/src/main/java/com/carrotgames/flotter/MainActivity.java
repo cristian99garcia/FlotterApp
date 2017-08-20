@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -91,27 +92,41 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Log.i("mainactivity", "false");
-            this.test(4);
+            this.test(2);
         }
     }
 
     private void test(int n) {
         if (n > 0) {
             graph.agregarFuncion(new Funcion("a", "2x-1", Color.RED));
-            graph.agregarFuncion(new Funcion("b", "-2x+1", Color.GREEN));
-            graph.agregarFuncion(new Funcion("c", "2x^2-3x+1", Color.GRAY));
+            /*
+            graph.agregarFuncion(new Funcion("a", "2x-2", Color.RED));
+            graph.agregarFuncion(new Funcion("a", "2x-3", Color.BLACK));
+            graph.agregarFuncion(new Funcion("a", "2x-4", Color.BLUE));
+            graph.agregarFuncion(new Funcion("a", "2x-5", Color.GREEN));
+            graph.agregarFuncion(new Funcion("a", "2x-6", Color.CYAN));
+            graph.agregarFuncion(new Funcion("a", "2x+0", Color.DKGRAY));
+            graph.agregarFuncion(new Funcion("a", "2x+1", Color.GRAY));
+            graph.agregarFuncion(new Funcion("a", "2x+2", Color.YELLOW));
+            graph.agregarFuncion(new Funcion("a", "2x+3", Color.RED));
+            graph.agregarFuncion(new Funcion("a", "2x-7", Color.CYAN));
+            graph.agregarFuncion(new Funcion("a", "2x+4", Color.DKGRAY));
+            graph.agregarFuncion(new Funcion("a", "2x+5", Color.GRAY));
+            graph.agregarFuncion(new Funcion("a", "2x+6", Color.YELLOW));
+            graph.agregarFuncion(new Funcion("a", "2x+7", Color.YELLOW));
+            */
         }
 
-        /*if (n > 1) {
-            graph.agregarFuncion(new Funcion("b", "cos(1x)", Color.GRAY));
-        }
+        if (n > 1)
+            graph.agregarFuncion(new Funcion("c", "(2x+1)/(-3x+2)", Color.BLUE));
 
-        if (n > 2) {
-            graph.agregarFuncion(new Funcion("c", "sen(1x)", Color.CYAN));
-        }
+        if (n > 2)
+            graph.agregarFuncion(new Funcion("d", "cos(1x)", Color.GRAY));
 
-        if (n > 3) {
-            graph.agregarFuncion(new Funcion("d", "3x^2-2x+1", Color.GREEN));
-        }*/
+        if (n > 3)
+            graph.agregarFuncion(new Funcion("e", "sen(1x)", Color.CYAN));
+
+        if (n > 4)
+            graph.agregarFuncion(new Funcion("f", "3x^2-2x+1", Color.GREEN));
     }
 }

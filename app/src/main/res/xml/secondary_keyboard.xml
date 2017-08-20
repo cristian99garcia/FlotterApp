@@ -6,39 +6,42 @@
     android:horizontalGap="1px"
     android:verticalGap="1px">
 
-    <!--log( abs( sgn(",
-                "rnd()sqrt(",
-                "round( asenh( acosh( atanh( asech( acsch( acoth(-->
-    <Row>
-        <Key android:codes="101" android:keyLabel="sin" android:keyOutputText="sin()"/>
-        <Key android:codes="101" android:keyLabel="cos" android:keyOutputText="cos()"/>
-        <Key android:codes="101" android:keyLabel="tan" android:keyOutputText="tan()"/>
-        <Key android:codes="101" android:keyLabel="sec" android:keyOutputText="sec()"/>
-        <Key android:codes="101" android:keyLabel="csc" android:keyOutputText="csc()"/>
-        <Key android:codes="101" android:keyLabel="cot" android:keyOutputText="cot()"/>
+    <Row android:keyWidth="25%p">
+        <Key android:codes="-3"/>
+        <Key android:codes="-3"/>
+        <Key android:codes="-1" android:keyLabel="←"/>
+        <Key android:codes="0" android:keyLabel="C"/>
     </Row>
     <Row>
-        <Key android:codes="101" android:keyLabel="sinh" android:keyOutputText="sinh()"/>
-        <Key android:codes="101" android:keyLabel="cosh" android:keyOutputText="cosh()"/>
-        <Key android:codes="101" android:keyLabel="tanh" android:keyOutputText="tanh()"/>
-        <Key android:codes="101" android:keyLabel="sech" android:keyOutputText="sech()"/>
-        <Key android:codes="101" android:keyLabel="csch" android:keyOutputText="csch()"/>
-        <Key android:codes="101" android:keyLabel="coth" android:keyOutputText="coth()"/>
+        <Key android:keyLabel="sin" android:keyOutputText="sin()"/>
+        <Key android:keyLabel="cos" android:keyOutputText="cos()"/>
+        <Key android:keyLabel="tan" android:keyOutputText="tan()"/>
+        <Key android:keyLabel="sec" android:keyOutputText="sec()"/>
+        <Key android:keyLabel="csc" android:keyOutputText="csc()"/>
+        <Key android:keyLabel="cot" android:keyOutputText="cot()"/>
     </Row>
     <Row>
-        <Key android:codes="101" android:keyLabel="asin" android:keyOutputText="asin()"/>
-        <Key android:codes="101" android:keyLabel="acos" android:keyOutputText="acos()"/>
-        <Key android:codes="101" android:keyLabel="atan" android:keyOutputText="atan()"/>
-        <Key android:codes="101" android:keyLabel="asec" android:keyOutputText="asec()"/>
-        <Key android:codes="101" android:keyLabel="acsc" android:keyOutputText="acsc()"/>
-        <Key android:codes="101" android:keyLabel="acot" android:keyOutputText="acot()"/>
+        <Key android:keyLabel="sinh" android:keyOutputText="sinh()"/>
+        <Key android:keyLabel="cosh" android:keyOutputText="cosh()"/>
+        <Key android:keyLabel="tanh" android:keyOutputText="tanh()"/>
+        <Key android:keyLabel="sech" android:keyOutputText="sech()"/>
+        <Key android:keyLabel="csch" android:keyOutputText="csch()"/>
+        <Key android:keyLabel="coth" android:keyOutputText="coth()"/>
     </Row>
     <Row>
-        <Key android:codes="101" android:keyLabel="asinh" android:keyOutputText="asinh()"/>
-        <Key android:codes="101" android:keyLabel="acosh" android:keyOutputText="acosh()"/>
-        <Key android:codes="101" android:keyLabel="atanh" android:keyOutputText="atanh()"/>
-        <Key android:codes="101" android:keyLabel="asech" android:keyOutputText="asech()"/>
-        <Key android:codes="101" android:keyLabel="acsch" android:keyOutputText="acsch()"/>
-        <Key android:codes="101" android:keyLabel="acoth" android:keyOutputText="acoth()"/>
+        <Key android:keyLabel="asin" android:keyOutputText="asin()"/>
+        <Key android:keyLabel="acos" android:keyOutputText="acos()"/>
+        <Key android:keyLabel="atan" android:keyOutputText="atan()"/>
+        <Key android:keyLabel="asec" android:keyOutputText="asec()"/>
+        <Key android:keyLabel="acsc" android:keyOutputText="acsc()"/>
+        <Key android:keyLabel="acot" android:keyOutputText="acot()"/>
+    </Row>
+    <Row>
+        <Key android:keyLabel="asinh" android:keyOutputText="asinh()"/>
+        <Key android:keyLabel="acosh" android:keyOutputText="acosh()"/>
+        <Key android:keyLabel="atanh" android:keyOutputText="atanh()"/>
+        <Key android:keyLabel="asech" android:keyOutputText="asech()"/>
+        <Key android:keyLabel="acsch" android:keyOutputText="acsch()"/>
+        <Key android:keyLabel="acoth" android:keyOutputText="acoth()"/>
     </Row>
 </Keyboard>

@@ -2,6 +2,7 @@ package com.carrotgames.flotter.pojo;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.carrotgames.flotter.R;
 
@@ -125,7 +126,10 @@ public class Funcion {
 
         Stack stackNumeros = new Stack();
         Stack stackOperadores = new Stack();
-        String expr = expression.toLowerCase().replace(" ", "");
+        String expr = expression.toLowerCase();
+        expr = expr.replace(" ", "")
+                   .replace("π", "pi");
+
         String fragmento;
         int pos = 0;
         int tamano = 0;
@@ -492,10 +496,12 @@ public class Funcion {
 
         if (Pattern.compile("^[-+]?(\\d+)*(.(\\d+))?$").matcher(cadena).find()) {
             tipo = TipoFuncion.CONSTANTE;
-        } else if (cadena.contains("x") && !Pattern.compile("[+-]?[x][\\^][-+]?(\\d+)*(.(\\d+))?").matcher(cadena).find() && !Pattern.compile("(?:sec|tan|cos)").matcher(cadena).find() && !cadena.contains("^x")) {
-            tipo = TipoFuncion.LINEAL;
+        } else if (Pattern.compile("[-+]?(\\d+)*(.(\\d+))?[+-]?(?:sen|tan|cos)[(].+[)]").matcher(cadena).find()) {   // FIXME: Faltan muchas funciones trigonómetricas
+            tipo = TipoFuncion.TRIGONOMETRICA;
         } else if (Pattern.compile("(.+)[/](.+)").matcher(cadena).find()) {
             tipo = TipoFuncion.RACIONAL;
+        } else if (cadena.contains("x") && !Pattern.compile("[+-]?[x][\\^][-+]?(\\d+)*(.(\\d+))?").matcher(cadena).find() && !Pattern.compile("(?:sec|tan|cos)").matcher(cadena).find() && !cadena.contains("^x")) {
+            tipo = TipoFuncion.LINEAL;
         } else if (Pattern.compile("[+-]?[x][\\^][2]").matcher(cadena).find() && !Pattern.compile("[+-]?[x][\\^][3-9]").matcher(cadena).find()) {
             tipo = TipoFuncion.CUADRATICA;
         } else if (Pattern.compile("[+-]?[x][\\^][3]").matcher(cadena).find() && !Pattern.compile("[+-]?[x][\\^][4-9]").matcher(cadena).find()) {
@@ -504,8 +510,6 @@ public class Funcion {
             tipo = TipoFuncion.POLINOMICA;
         } else if (Pattern.compile("[+-]?(\\d+)*(.(\\d+))?[\\^][+-]?(\\d+)*(.(\\d+))?[x]").matcher(cadena).find()) {
             tipo = TipoFuncion.EXPONENCIAL;
-        } else if (Pattern.compile("[-+]?(\\d+)*(.(\\d+))?[+-]?(?:sec|tan|cos)[(].+[)]").matcher(cadena).find()) {
-            tipo = TipoFuncion.TRIGONOMETRICA;
         }
     }
 
@@ -515,6 +519,10 @@ public class Funcion {
 
     public TipoFuncion getTipo() {
         return this.tipo;
+    }
+
+    public boolean esEspecial() {
+        return tipo == TipoFuncion.RACIONAL;
     }
 
     public int getNombreStringID() {

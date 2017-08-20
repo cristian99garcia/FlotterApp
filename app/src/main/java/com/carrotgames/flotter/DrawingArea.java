@@ -5,7 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -32,6 +34,9 @@ public class DrawingArea extends View {
     private boolean reseted = true;
     private float[] lastPoint = new float[] { 0f, 0f };
     private float[] draggingPoint = new float[] { 0f, 0f };
+    private int actionBarHeight = 0;
+    private AppCompatActivity activity;
+    private boolean calculando = false;
 
     private ScaleGestureDetector mScaleDetector;
     private GestureDetector gestureDetector;
@@ -44,6 +49,13 @@ public class DrawingArea extends View {
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         paint = new Paint();
         funs = new ArrayList<>();
+
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+
+        startY = -actionBarHeight;
+        activity = (AppCompatActivity)context;
     }
 
     @Override
@@ -56,6 +68,7 @@ public class DrawingArea extends View {
     protected void onDraw(Canvas canvas) {
         this.drawGrid(canvas);
         this.drawAxes(canvas);
+        this.drawNumbers(canvas);
         this.drawFunctions(canvas);
     }
 
@@ -68,9 +81,23 @@ public class DrawingArea extends View {
                 break;
 
             case (MotionEvent.ACTION_UP):
-                // Evitar calcular cuando hay una doble pulsación
-                this.makeFunctionsPoints();
-                invalidate();
+                // FIXME: Evitar calcular cuando hay una doble pulsación
+
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        calculando = false;  // Si se estaba calculando antes, se detendrá
+                        makeFunctionsPoints();
+
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                update();
+                            }
+                        });
+                    }
+                });
+
+                t.start();
                 break;
 
             case (MotionEvent.ACTION_MOVE):
@@ -80,7 +107,7 @@ public class DrawingArea extends View {
 
                     lastPoint[0] = event.getX();
                     lastPoint[1] = event.getY();
-                    invalidate();
+                    update();
                 }
 
                 break;
@@ -90,32 +117,6 @@ public class DrawingArea extends View {
         gestureDetector.onTouchEvent(event);
         return true;
     }
-
-    /*
-    private float getFactor() {
-        float[] pointA = this.getRealPoint(1, 1);
-        float[] pointB = this.getRealPoint(2, 1);
-
-        // Distancia entre dos puntos
-        float a = (float) Math.pow(pointA[0] + pointB[0], 2);
-        float b = (float) Math.pow(pointA[1] + pointB[1], 2);
-        float d = (float) Math.sqrt(a + b);
-
-        // FIXME: está re mal esto
-        /*if (d >= 1000) {
-            return 2f;
-        } else if (d <= 400) {
-            return 5f;
-        } else if (d <= 800) {
-            return 4f;
-        } else if (d <= 1000) {
-            return 3f;
-        } else {
-            return 1f;
-        }////
-        return 4;
-    }
-    */
 
     private void drawGrid(Canvas canvas) {
         float width = getWidth();
@@ -140,7 +141,7 @@ public class DrawingArea extends View {
         while (point[0] > 0) {
             lastLine -= factor;
             point = this.getRealPoint(lastLine, 0);
-            canvas.drawLine(point[0], 0, point[0], height, paint);
+            canvas.drawLine(point[0], actionBarHeight, point[0], height, paint);
         }
 
         lastLine = 0;
@@ -148,7 +149,7 @@ public class DrawingArea extends View {
         while (point[0] < getWidth()) {
             lastLine += factor;
             point = this.getRealPoint(lastLine, 0);
-            canvas.drawLine(point[0], 0, point[0], height, paint);
+            canvas.drawLine(point[0], actionBarHeight, point[0], height, paint);
         }
 
         lastLine = 0;
@@ -174,8 +175,57 @@ public class DrawingArea extends View {
         paint.setStrokeWidth(2f);
         paint.setColor(Color.GRAY);
 
-        canvas.drawLine(0, rPoint[1], width, rPoint[1], paint);  // X axe
-        canvas.drawLine(rPoint[0], 0, rPoint[0], height, paint);   // Y axe
+        canvas.drawLine(0, rPoint[1] + actionBarHeight, width, rPoint[1] + actionBarHeight, paint);  // X axe
+        canvas.drawLine(rPoint[0], actionBarHeight, rPoint[0], height, paint);   // Y axe
+    }
+
+    private void drawNumbers(Canvas canvas) {
+        float[] rPoint = this.getFalsePoint(0, actionBarHeight);
+        int minX = (int)rPoint[0] - 1;
+        int minY = (int)rPoint[1] - 1;
+
+        float[] fPoint = this.getFalsePoint(getWidth(), getHeight());
+        int maxX = (int)fPoint[0] + 1;
+        int maxY = (int)fPoint[1] + 1;
+
+        int fsize = 50;
+        int space = 5;
+        float x, y;
+        float[] p;
+
+        p = getRealPoint(0, 0);
+        x = p[0] + space;
+        if (x < space)
+            x = space;
+        else if (x > getWidth() - space - fsize)
+            x = getWidth() - space - fsize;
+
+        y = p[1] + fsize + space;
+        if (y < actionBarHeight + space + fsize)
+            y = actionBarHeight + space + fsize;
+        else if (y > getHeight() - space)
+            y = getHeight() - space;
+
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(fsize);
+
+        for (int i = minX; i <= maxX; i++) {
+            if (i == 0) {
+                continue;
+            }
+
+            p = getRealPoint(i, 0);
+            canvas.drawText(""+i, p[0] + space, y, paint);
+        }
+
+        for (int i = (maxY*-1); i <= (minY*-1); i++) {
+            if (i == 0) {
+                continue;
+            }
+
+            p = getRealPoint(0, i);
+            canvas.drawText(""+i, x, p[1] + space, paint);
+        }
     }
 
     private void drawFunctions(Canvas canvas) {
@@ -260,33 +310,38 @@ public class DrawingArea extends View {
         float unitY = Math.max(getWidth(), getHeight()) / maxY;
         float[] startPoint = this.getRealStartPoint();
 
-        return new float[]{ startPoint[0] + unitX * x * mScaleFactor, startPoint[1] - unitY * y * mScaleFactor };
+        return new float[]{
+                startPoint[0] + unitX * x * mScaleFactor,
+                (startPoint[1] - unitY * y * mScaleFactor) + actionBarHeight
+        };
     }
 
     private float[] getFalsePoint(float x, float y) {
         // Devuelve el punto en el sistema de ejes cartesianos a partir las coordenadas de un pixel
+
         float unitX = Math.max(getWidth(), getHeight()) / maxX;
         float unitY = Math.max(getWidth(), getHeight()) / maxY;
 
         // Está re mal
         float rX = (x / unitX) / mScaleFactor - ((startX / unitX) / mScaleFactor) - ((getWidth() * .5f / unitX) / mScaleFactor);
-        float rY = (y / unitY) / mScaleFactor - ((startY / unitY) / mScaleFactor) - ((getHeight() * .5f / unitY) / mScaleFactor);
+        float rY = (y / unitY) / mScaleFactor - ((startY / unitY) / mScaleFactor) - (((getHeight() + actionBarHeight) * .5f / unitY) / mScaleFactor);
 
+        //Log.i("getFalsePoint2", ""+rY);
         return new float[] { rX, rY };
     }
 
     private float[] getStartPoint() {
         // (0, 0)
-        //point[0] = 0;
-        //point[1] = 0;
-
         return new float[] { 0, 0 };
     }
 
     private float[] getRealStartPoint() {
-        // (0, 0) in screen
+        // Devuelve los pixeles para el (0, 0) de los ejes cartesianos
         float[] point = this.getStartPoint();
-        return new float[]{ point[0] + getWidth() / 2f + startX, point[1] + getHeight() / 2f + startY};
+        return new float[]{
+                point[0] + getWidth() / 2f + startX,
+                point[1] + getHeight() / 2f + startY
+        };
     }
 
     public void agregarFuncion(Funcion fun) {
@@ -295,15 +350,6 @@ public class DrawingArea extends View {
     }
 
     public void makeFunctionsPoints() {
-        //float start, end, advance;
-        //start = -20f;
-        //end = 20f;
-
-        //for (Funcion fun: funs) {
-        //    fun.puntos.clear();
-        //    fun.crearPuntos(start, end, advance);
-        //}
-
         float advance = .05f;
 
         if (mScaleFactor < .2f) {
@@ -315,31 +361,63 @@ public class DrawingArea extends View {
         }
 
         float[] startPoint = this.getFalsePoint(0, 0);
+        startPoint[0] -= 1;
+        startPoint[1] += 1;
+
         float[] endPoint = this.getFalsePoint(getWidth(), getHeight());
+        endPoint[0] += 1;
+        endPoint[1] -= 1;
+
         float[] continuePoint = new float[] { 0f, 0f };
         boolean useContinuePoint = false;
 
+        calculando = true;
+
         for (Funcion fun: this.funs) {
-            //fun.makePoints(start, end, advance);
             fun.puntos.clear();
             useContinuePoint = false;
 
-            for (float i=startPoint[0]; i<endPoint[0]; i += advance) {
-                float[] point = new float[] { i, fun.getY(i) };
-                if (this.getPointInScreen(i + advance, fun.getY(i + advance)) ||    // Si el siguiente está en pantalla, este entra
-                        this.getPointInScreen(point[0], point[1])) {                    // Si este está en pantalla también entra
-                    if (useContinuePoint) {
-                        fun.puntos.add(continuePoint);
-                        continuePoint = new float[] { 0f, 0f };
-                        useContinuePoint = false;
+            if (fun.esEspecial()) {
+                // FIXME: Buscar el primer y último punto
+                for (float i=-1; i < getWidth() + 1; i+= 1) {
+                    if (!calculando) {
+                        return;
                     }
+
+                    float x = getFalsePoint(i, 0)[0];
+                    float[] point = new float[] { x, fun.getY(x) };
+
+                    if (!getPointInScreen(point[0], point[1])) {
+                        continue;
+                    }
+
                     fun.puntos.add(point);
-                } else {
-                    useContinuePoint = true;
-                    continuePoint = point;
+                }
+            } else {
+                for (float i = startPoint[0]; i < endPoint[0]; i += advance) {
+                    if (!calculando) {
+                        return;
+                    }
+
+                    float[] point = new float[]{i, fun.getY(i)};
+                    if (this.getPointInScreen(i + advance, fun.getY(i + advance)) ||    // Si el siguiente está en pantalla, este entra
+                            this.getPointInScreen(point[0], point[1])) {                    // Si este está en pantalla también entra
+
+                        if (useContinuePoint) {
+                            fun.puntos.add(continuePoint);
+                            continuePoint = new float[]{0f, 0f};
+                            useContinuePoint = false;
+                        }
+                        fun.puntos.add(point);
+                    } else {
+                        useContinuePoint = true;
+                        continuePoint = point;
+                    }
                 }
             }
         }
+
+        calculando = false;
     }
 
     public void update() {
@@ -357,7 +435,7 @@ public class DrawingArea extends View {
             mScaleFactor *= detector.getScaleFactor();
             mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
 
-            invalidate();
+            update();
             return true;
         }
     }

@@ -73,15 +73,13 @@ public class EditFunctionActivity extends AppCompatActivity {
         keyboardView = (KeyboardView)findViewById(R.id.keyboardView);
         keyboardView.setKeyboard(mainKeyboard);
         keyboardView.setPreviewEnabled(false);
-        //keyboardView.setOnKeyboardActionListener(this.makeKeyboardListener());
+        keyboardView.setOnKeyboardActionListener(this.kvlistener());
 
         entry = (EditText) findViewById(R.id.functionsInput);
-        //entry.setOnKeyListener(null);       // Evitando que salga el teclado del sistema, no funciona
-        //entry.setTextIsSelectable(true);    // sin este otro set
-        //entry.setInputType(InputType.TYPE_CLASS_TEXT);// | InputType.TYPE_CLASS_NUMBER);
+        entry.setOnKeyListener(null);       // Evitando que salga el teclado del sistema, no funciona
+        entry.setTextIsSelectable(true);    // sin este otro set
 
         keyboardView.setVisibility(View.VISIBLE);
-        keyboardView.setEnabled(true);
     }
 
     private boolean addFunction() {
@@ -153,67 +151,28 @@ public class EditFunctionActivity extends AppCompatActivity {
                 .show();
     }
 
-    private KeyboardView.OnKeyboardActionListener makeKeyboardListener() {
+    private KeyboardView.OnKeyboardActionListener kvlistener() {
         final KeyboardView.OnKeyboardActionListener keyboardListener = new KeyboardView.OnKeyboardActionListener() {
             @Override
             public void onKey(int primaryCode, int[] keyCodes) {
             }
 
             @Override
-            public void onPress(int arg0) {
+            public void onPress(int arg) {
+                if (arg == -1) {
+                    borrarDesdeCursor();
+                } else if (arg == 0) {
+                    limpiarEntrada();
+                }
             }
 
             @Override
             public void onRelease(int primaryCode) {
-                if (primaryCode == -1) {
-                    entry.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                } else if (primaryCode == 0) {
-                    entry.getText().clear();
-                }
             }
 
             @Override
             public void onText(CharSequence sequence) {
-                //int start = Math.max(((EditText)findViewById(R.id.functionsInput)).getSelectionStart(), 0);
-                //int end = Math.max(((EditText)findViewById(R.id.functionsInput)).getSelectionEnd(), 0);
-                //String text = ((EditText)findViewById(R.id.functionsInput)).getText().toString() + sequence.toString();
-                //Log.i("onText2", "%s %s &s".format(sequence.toString(), entry.getText(), text));
-
-                char[] a = new char[entry.getText().length() + sequence.length()];
-                int i = 0;
-                for (char x: entry.getText().toString().toCharArray()) {
-                    a[i] = x;
-                    i++;
-                }
-
-                for (char x: sequence.toString().toCharArray()) {
-                    a[i] = x;
-                    i++;
-                }
-                entry.setText(a, 0, a.length);
-                //entry.setText(sequence, TextView.BufferType.NORMAL); //text, TextView.BufferType.EDITABLE);
-                //entry.setSelection(entry.getText().length() - 1, entry.getText().length());
-
-
-
-                //String text = ((EditText)findViewById(R.id.functionsInput)).getText().toString();
-                //String newText = text.substring(0, start) + sequence + text.substring(end, text.length());
-                //entry.setText(newText, TextView.BufferType.NORMAL);
-                //Log.i("onText3", newText);
-
-                ///entry.setText(text, TextView.BufferType.NORMAL);
-                //int start = Math.max(entry.getSelectionStart(), 0);
-                //int end = Math.max(entry.getSelectionEnd(), 0);
-                //entry.setText((entry.getText().replace(Math.min(start, end), Math.max(start, end), sequence, 0, sequence.length())));
-                //entry.setSelection(start + sequence.length() - 1);
-                //entry.append(sequence, start, end);//, Math.min(start, end), Math.max(start, end));
-                //entry.setText((entry.getText() + text).toCharArray(), 0, (entry.getText() + text).length());
-                //entry.setText(entry.getText().replace(Math.min(start, end), Math.max(start, end), text, 0, text.length()));
-                //entry.setFocusable(true);
-                //entry.requestFocus();
-
-
-                entry.setSelection(entry.getText().length());
+                insertarDesdeCursor(sequence.toString());
             }
 
             @Override
@@ -258,6 +217,57 @@ public class EditFunctionActivity extends AppCompatActivity {
         };
 
         return keyboardListener;
+    }
+
+    public void borrarDesdeCursor() {
+        String texto = entry.getText().toString();
+        String nuevo;
+        String inicio, fin;
+        int posicion;
+
+        int start = entry.getSelectionStart();
+        int end = entry.getSelectionEnd();
+
+        if (start == end && start != 0) {
+            posicion = start - 1;
+        } else {
+            posicion = start;
+        }
+
+        inicio = texto.substring(0, posicion);
+        fin = texto.substring(end, texto.length());
+        nuevo = inicio + fin;
+        entry.setText(nuevo);
+
+        if (posicion < nuevo.length())
+            entry.setSelection(posicion);
+        else
+            entry.setSelection(nuevo.length());
+    }
+
+    public void insertarDesdeCursor(String texto) {
+        int start = entry.getSelectionStart();
+        int end = entry.getSelectionEnd();
+
+        if (start != end) {
+            borrarDesdeCursor();
+            start = entry.getSelectionStart();
+        }
+
+        String actual = entry.getText().toString();
+        String nuevo = actual.substring(0, start) + texto + actual.substring(start, actual.length());
+        entry.setText(nuevo);
+
+        int posicion = start + texto.length();
+        if (texto.endsWith("()") || texto.endsWith("||")) {
+            posicion -= 1;
+        }
+
+        entry.setSelection(posicion);
+    }
+
+    public void limpiarEntrada() {
+        entry.setText("");
     }
 
     public String getTextForKey(int key) {

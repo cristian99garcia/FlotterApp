@@ -18,31 +18,42 @@ public class FunctionsActivity extends AppCompatActivity implements FunctionsLis
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] nombres = new String[0];
-        String[] expresiones = new String[0];
-        int[] colores = new int[0];
-        Bundle parametros = getIntent().getExtras();
-        if (getIntent().hasExtra(getResources().getString(R.string.put_expresiones))) {
-            nombres = parametros.getStringArray(getResources().getString(R.string.put_nombres));
-            expresiones = parametros.getStringArray(getResources().getString(R.string.put_expresiones));
-            colores = parametros.getIntArray(getResources().getString(R.string.put_colores));
-        }
+        if (findViewById(R.id.root_layout) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
 
-        if (savedInstanceState == null) {
+            String[] nombres = new String[0];
+            String[] expresiones = new String[0];
+            int[] colores = new int[0];
+            Bundle parametros = getIntent().getExtras();
+            if (getIntent().hasExtra(getResources().getString(R.string.put_expresiones))) {
+                nombres = parametros.getStringArray(getResources().getString(R.string.put_nombres));
+                expresiones = parametros.getStringArray(getResources().getString(R.string.put_expresiones));
+                colores = parametros.getIntArray(getResources().getString(R.string.put_colores));
+            }
+
             getSupportFragmentManager().
                     beginTransaction().
-                    replace(R.id.root_layout, FunctionsListFragment.newInstance(nombres, expresiones, colores), "functionsList").
+                    replace(R.id.root_layout,
+                            FunctionsListFragment.newInstance(nombres, expresiones, colores),
+                            "functionsList").
                     commit();
         }
     }
 
     @Override
     public void onFunctionSelected(String nombre, String expresion, int color) {
-        final FunctionPropertiesFragment propertiesFragment = FunctionPropertiesFragment.newInstance(nombre, expresion, color);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.root_layout, propertiesFragment, "functionProperties")
+        FunctionPropertiesFragment fragment = (FunctionPropertiesFragment)getSupportFragmentManager().findFragmentById(R.id.function_properties_fragment);
+
+        if (fragment != null) {
+            fragment.setInformacion(nombre, expresion, color);
+        } else {
+            fragment = FunctionPropertiesFragment.newInstance(nombre, expresion, color);
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.root_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+        }
     }
 }

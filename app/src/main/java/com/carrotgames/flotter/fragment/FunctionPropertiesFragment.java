@@ -22,16 +22,15 @@ public class FunctionPropertiesFragment extends Fragment {
     private WebView webView;
     private Funcion funcion;
 
+    private String nombre = "";
+    private String expresion = "";
+    private int color = 0;
+
     public static String assets = "file:///android_asset/";
 
     public static FunctionPropertiesFragment newInstance(String nombre, String expresion, int color) {
-        final Bundle args = new Bundle();
-        args.putString("nombre", nombre);
-        args.putString("expresion", expresion);
-        args.putInt("color", color);
-
         final FunctionPropertiesFragment fragment = new FunctionPropertiesFragment();
-        fragment.setArguments(args);
+        fragment.setInformacion(nombre, expresion, color);
         return fragment;
     }
 
@@ -49,16 +48,17 @@ public class FunctionPropertiesFragment extends Fragment {
         return view;
     }
 
+    public void setInformacion(String nombre, String expresion, int color) {
+        this.nombre = nombre;
+        this.expresion = expresion;
+        this.color = color;
+    }
+
     private void configurarWebView() {
         // Configura el WebView, y hace que cargue la página dinámica.
         WebSettings configuraciones = webView.getSettings();
         configuraciones.setJavaScriptEnabled(true);
         configuraciones.setDefaultTextEncodingName("utf-8");
-
-        final Bundle args = getArguments();
-        String nombre = args.getString("nombre");
-        String expresion = args.getString("expresion");
-        int color = args.getInt("color");
 
         funcion = new Funcion(nombre, expresion, color);
         webView.loadDataWithBaseURL(assets, crearPagina(), "text/html", "utf-8", null);

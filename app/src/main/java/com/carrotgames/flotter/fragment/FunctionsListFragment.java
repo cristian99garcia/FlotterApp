@@ -9,12 +9,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.carrotgames.flotter.pojo.FunctionItem;
 import com.carrotgames.flotter.R;
@@ -147,7 +149,7 @@ public class FunctionsListFragment extends Fragment {
         }
     }
 
-    private void detectarPulsaciones(WebView view, String n, String e, int c) {
+    private void detectarPulsaciones(View view, String n, String e, int c) {
         final String nombre = n;
         final String expresion = e;
         final int color = c;
@@ -158,29 +160,51 @@ public class FunctionsListFragment extends Fragment {
             public final static int FINGER_UNDEFINED = 3;
 
             private int fingerState = FINGER_RELEASED;
+            private float startX = 0;
+            private float startY = 0;
+            private float distancia = 0;
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (fingerState == FINGER_RELEASED) fingerState = FINGER_TOUCHED;
-                        else fingerState = FINGER_UNDEFINED;
+                        if (fingerState == FINGER_RELEASED) {
+                            fingerState = FINGER_TOUCHED;
+                            startX = motionEvent.getX();
+                            startY = motionEvent.getY();
+                        } else {
+                            fingerState = FINGER_UNDEFINED;
+                        }
+
                         return true;
 
                     case MotionEvent.ACTION_UP:
                         if(fingerState != FINGER_DRAGGING) {
                             fingerState = FINGER_RELEASED;
-
                             mListener.onFunctionSelected(nombre, expresion, color);
-
+                            distancia = 0;
+                            startX = 0;
+                            startY = 0;
                         }
-                        else if (fingerState == FINGER_DRAGGING) fingerState = FINGER_RELEASED;
-                        else fingerState = FINGER_UNDEFINED;
+                        else if (fingerState == FINGER_DRAGGING) {
+                            fingerState = FINGER_RELEASED;
+                            distancia = 0;
+                            startX = 0;
+                            startY = 0;
+                        } else {
+                            fingerState = FINGER_UNDEFINED;
+                        }
+
                         return true;
 
                     case MotionEvent.ACTION_MOVE:
-                        if (fingerState == FINGER_TOUCHED || fingerState == FINGER_DRAGGING) fingerState = FINGER_DRAGGING;
-                        else fingerState = FINGER_UNDEFINED;
+                        distancia = Math.max((float)Math.sqrt(Math.pow(startX - motionEvent.getX(), 2) + Math.pow(startY - motionEvent.getY(), 2)), distancia);
+                        if ((fingerState == FINGER_TOUCHED || fingerState == FINGER_DRAGGING) && distancia > 20) {
+                            fingerState = FINGER_DRAGGING;
+                        } else {
+                            fingerState = FINGER_UNDEFINED;
+                        }
+
                         break;
 
                     default:
@@ -200,14 +224,6 @@ public class FunctionsListFragment extends Fragment {
         private ViewHolder(View itemView) {
             super(itemView);
             wvFormula = (WebView) itemView.findViewById(R.id.wvFormula);
-            wvFormula.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return true;
-                }
-            });
-
-            wvFormula.setLongClickable(true);
 
             cvRecycler = (CardView) itemView.findViewById(R.id.cvRecycler);
             cvRecycler.setClickable(true);
@@ -220,18 +236,17 @@ public class FunctionsListFragment extends Fragment {
             String jqmathPath = "jqmath-etc-0.4.5.min.js";
 
             String pagina =
-                    "<!DOCTYPE>" +
-                    "<head>" +
-                        "<style>h2 { font-weight:normal; }</style>" +
-                        "<title>Formula</title>" +
-                        "<link rel=\"stylesheet\" href=\"" + cssPath + "\" type=\"text/css\">" +
-                        "<script src=\"" + jqueryPath + "\" type=\"text/javascript\"></script>" +
-                        "<script src=\"" + jqmathPath + "\" type=\"text/javascript\" charset=\"utf-8\"></script>" +
-                    "</head>" +
-                    "<body>" +
-                        String.format("<h2 style='color:%s'>$%s(x) = %s$</h2>", hexColor, nombre, expresion) +
-                    "</body>";
-
+                "<!DOCTYPE>" +
+                "<head>" +
+                    "<style>h2 { font-weight:normal; }</style>" +
+                    "<title>Formula</title>" +
+                    "<link rel=\"stylesheet\" href=\"" + cssPath + "\" type=\"text/css\">" +
+                    "<script src=\"" + jqueryPath + "\" type=\"text/javascript\"></script>" +
+                    "<script src=\"" + jqmathPath + "\" type=\"text/javascript\" charset=\"utf-8\"></script>" +
+                "</head>" +
+                "<body>" +
+                    String.format("<h2 style='color:%s'>$%s(x) = %s$</h2>", hexColor, nombre, expresion) +
+                "</body>";
 
             WebSettings configuraciones = wvFormula.getSettings();
             configuraciones.setJavaScriptEnabled(true);

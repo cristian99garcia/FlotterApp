@@ -17,8 +17,8 @@ public class CalculadorPasoAPaso {
     }
 
     public ArrayList<String> getRaices() {
-        Log.i("getRaices", "1");
-        ArrayList pasos = new ArrayList<String>();
+        Log.i("getRaices", funcion.getTipo() + " " + funcion.getExpresion());
+        ArrayList pasos = new ArrayList<>();
         pasos.add("#Para obtener las raíces de cualquier función, se iguala su a 0, y se resuelve la ecuación.");
 
         switch (funcion.getTipo()) {

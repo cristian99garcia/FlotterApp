@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false" >
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/actionbar" />
+
+    <FrameLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <fragment
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="com.carrotgames.flotter.fragment.FunctionsListFragment"
+            android:id="@+id/recycler_view"
+            android:layout_weight="1"
+            tools:layout="@layout/fragment_functions_list" />
+
+        <fragment
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:name="com.carrotgames.flotter.fragment.FunctionPropertiesFragment"
+            android:id="@+id/function_properties_fragment"
+            android:layout_weight="2"
+            tools:layout="@layout/fragment_function_properties" />
+    </FrameLayout>
+
+</LinearLayout>
